@@ -1,5 +1,10 @@
+
+
+
 const Course = ({course}) => {
-  
+
+  const total = course.parts.reduce( (s, p) =>  s + p.exercises, 0)
+
   console.log(course)
   return (
     <>
@@ -7,11 +12,18 @@ const Course = ({course}) => {
       {course.parts.map(part => <li key={part.id}>
         {part.name} {part.exercises}
         </li>
+
         )}
+        <h3>total of {total} exercises</h3>
+        
+
+        
+
      </>
   )
   
 }
+
 
 
 const App = () => {
@@ -36,6 +48,9 @@ const App = () => {
       }
     ]
   }
+
+  
+  
 
   return (
     <div>
