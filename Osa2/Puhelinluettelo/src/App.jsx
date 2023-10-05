@@ -4,6 +4,8 @@ import axios from 'axios'
 import { Persons } from './components/Persons'
 import { PersonForm } from './components/PersonForm'
 import { Finder } from './components/Finder'
+import personService from './services/personService'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,8 +15,8 @@ const App = () => {
   
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
@@ -38,8 +40,8 @@ const App = () => {
       number : newNumber
     }
     
-    axios
-    .post('http://localhost:3001/persons', personObject)
+    personService
+    .create(personObject)
     .then(response => {
       setPersons(persons.concat(response.data))
       console.log(response)
@@ -51,8 +53,6 @@ const App = () => {
  
  
   const handleFinder = (event) => {
-  
-  
   const searchTerm = event.target.value
     setFinder(searchTerm)
   
