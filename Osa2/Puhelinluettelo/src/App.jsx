@@ -18,9 +18,10 @@ const App = () => {
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
+        
       })
   }, [])
-  console.log('render', persons.length, 'notes')
+  console.log('render', persons.length, 'persons')
   
   
   const addName = (event) => {
@@ -37,7 +38,12 @@ const App = () => {
       number : newNumber
     }
     
-    setPersons([...persons, personObject])
+    axios
+    .post('http://localhost:3001/persons', personObject)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      console.log(response)
+    })
     setNewName('')
     setNewNumber('')
     
@@ -46,7 +52,7 @@ const App = () => {
  
   const handleFinder = (event) => {
   
-  console.log(event.target.value)
+  
   const searchTerm = event.target.value
     setFinder(searchTerm)
   
@@ -54,11 +60,11 @@ const App = () => {
  
  
   const handleNewPerson = (event) => {
-    console.log(event.target.value)
+    
     setNewName(event.target.value)
   }
   const handleNewNumber = (event) => {
-    console.log(event.target.value)
+    
     setNewNumber(event.target.value)
   }
 
