@@ -1,23 +1,23 @@
+import { Persons } from './components/Persons'
 import { useState } from 'react'
+import { PersonForm } from './components/PersonForm'
+import { Finder } from './components/Finder'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
     
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [searchItem, setFinder] = useState('')
   
-
-  const handleNewPerson = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-  const handleNewNumber = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-
+  
+  
+  
   const addName = (event) => {
     event.preventDefault()
     
@@ -32,35 +32,51 @@ const App = () => {
       number : newNumber
     }
     
-    setPersons(persons.concat(personObject))
+    setPersons([...persons, personObject])
     setNewName('')
     setNewNumber('')
+    
+  }
+ 
+ 
+  const handleFinder = (event) => {
+  
+  console.log(event.target.value)
+  const searchTerm = event.target.value
+    setFinder(searchTerm)
+  
+   
+
+  
+  
+
+ }
+ 
+ 
+  const handleNewPerson = (event) => {
+    console.log(event.target.value)
+    setNewName(event.target.value)
+  }
+  const handleNewNumber = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
   }
 
+
+
+ 
  
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName} >
-        <div>
-          name: <input
-          value={newName}
-          onChange={handleNewPerson}
-          />
-        </div>
-        <div>
-          number: <input
-          value={newNumber}
-          onChange={handleNewNumber}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-        </form>
+      <Finder handleFinder={handleFinder}/>
+      <h3>add a new</h3>
+      <PersonForm addName={addName} newName={newName} handleNewPerson={handleNewPerson} newNumber={newNumber} handleNewNumber={handleNewNumber}/>
       <h2>Numbers</h2>
-      <div>{persons.map(person => <ul key={person.name}>{person.name} {person.number}</ul>)}</div>
+      
+      <Persons persons={persons} searchItem={searchItem} />
+      
     </div>
   )
 
