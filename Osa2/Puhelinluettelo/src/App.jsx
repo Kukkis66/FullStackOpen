@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+
 import { Persons } from './components/Persons'
 import { PersonForm } from './components/PersonForm'
 import { Finder } from './components/Finder'
@@ -68,7 +68,18 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-
+  const handleDelete = (id, name) => {
+    console.log(id + " deleted")
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+      .destroy(id)
+      .then(response => {
+      console.log(response)})
+      window.location.reload();
+    }
+    
+  }
+  
 
  
  
@@ -81,7 +92,8 @@ const App = () => {
       <PersonForm addName={addName} newName={newName} handleNewPerson={handleNewPerson} newNumber={newNumber} handleNewNumber={handleNewNumber}/>
       <h2>Numbers</h2>
       
-      <Persons persons={persons} searchItem={searchItem} />
+      <Persons persons={persons} searchItem={searchItem} handleDelete={handleDelete} />
+      
       
     </div>
   )
