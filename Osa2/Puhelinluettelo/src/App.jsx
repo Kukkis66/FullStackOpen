@@ -13,8 +13,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchItem, setFinder] = useState('')
   
+  
+  
+
+
+
   useEffect(() => {
-    console.log('effect')
+    
     personService
       .getAll()
       .then(response => {
@@ -23,17 +28,45 @@ const App = () => {
         
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+  
+
+  
+
   
   
   const addName = (event) => {
     event.preventDefault()
     
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName}" is already added to phonebook`)
-      setNewName('')
-      return
-    }
+      
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        
+          const person = persons.find(p => p.name === newName)
+          const id = person.id
+          const changedNumber = { ...person, number: newNumber }
+          
+        
+          personService
+            .update(id, changedNumber).then(response => {
+              setPersons(persons.map(p => p.id !== id ? p : response))
+            })
+            
+            .catch(error => {
+              alert(
+                `the person '${person.name}' was already deleted from server`
+              )
+              setPersons(persons.filter(p => p.id !== id))
+            })
+            window.location.reload();
+            
+        }
+      
+    else
+    setNewName('')
+    return
+  }
+      
+    
     
     const personObject = {
       name : newName,
