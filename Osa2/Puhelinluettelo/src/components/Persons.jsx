@@ -1,7 +1,7 @@
 
 export const Persons = (props) => {
     const filteredPersons = props.persons.filter((person) =>
-    person.name.includes(props.searchItem)
+    String(person.name).toLowerCase().includes(props.searchItem.toLowerCase())
     );
     
     

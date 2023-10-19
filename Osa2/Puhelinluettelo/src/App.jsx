@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Persons } from './components/Persons'
 import { PersonForm } from './components/PersonForm'
 import { Finder } from './components/Finder'
+import { Notification } from './components/Notification'
+import { Errormessage } from './components/Errormessage'
 import personService from './services/personService'
 
 
@@ -12,7 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchItem, setFinder] = useState('')
-  
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   
   
 
@@ -23,14 +26,50 @@ const App = () => {
     personService
       .getAll()
       .then(response => {
-        console.log('promise fulfilled')
+        console.log('promise fulfilled', response.data)
         setPersons(response.data)
         
       })
   }, [])
+  console.log(persons.length, 'persons')
   
-
-  
+       const changeNumber = (id) => {
+        
+          const person = persons.find(p => p.id === id)
+          console.log(person.name)
+          const changedNumber = { ...person, number: newNumber }
+          console.log(changedNumber)
+          
+        
+          personService
+            .update(id, changedNumber)
+            .then(response => {
+              console.log(response.data, "vastaus")
+              
+              setPersons(persons.map(p => p.id !== id ? p : response.data))
+              setMessage(`person ${person.name} number was changed.`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 3000) 
+            
+              
+            })
+            
+            
+            .catch(error => {
+              setErrorMessage(
+                `the person ${person.name} was already deleted from server`
+              )
+              setPersons(persons.filter(p => p.id !== id))
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+              
+            })
+            setNewName('')
+            setNewNumber('')
+          
+          }
 
   
   
@@ -41,23 +80,12 @@ const App = () => {
       
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         
-          const person = persons.find(p => p.name === newName)
-          const id = person.id
-          const changedNumber = { ...person, number: newNumber }
-          
+        const person = persons.find(p => p.name === newName)
         
-          personService
-            .update(id, changedNumber).then(response => {
-              setPersons(persons.map(p => p.id !== id ? p : response))
-            })
+        changeNumber(person.id)   
             
-            .catch(error => {
-              alert(
-                `the person '${person.name}' was already deleted from server`
-              )
-              setPersons(persons.filter(p => p.id !== id))
-            })
-            window.location.reload();
+            
+            
             
         }
       
@@ -66,7 +94,7 @@ const App = () => {
     return
   }
       
-    
+  
     
     const personObject = {
       name : newName,
@@ -77,17 +105,24 @@ const App = () => {
     .create(personObject)
     .then(response => {
       setPersons(persons.concat(response.data))
-      console.log(response)
+      
+      
     })
     setNewName('')
     setNewNumber('')
+    setMessage(`Added ${personObject.name}`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
     
   }
  
  
   const handleFinder = (event) => {
-  const searchTerm = event.target.value
-    setFinder(searchTerm)
+    console.log(event.target.value)
+    const searchTerm = event.target.value
+      setFinder(searchTerm)
+    
   
   }
  
@@ -102,24 +137,34 @@ const App = () => {
   }
 
   const handleDelete = (id, name) => {
-    console.log(id + " deleted")
-    if (window.confirm(`Delete ${name}?`)) {
+    
+    if (window.confirm(`Delete ${name}?`)) { 
       personService
       .destroy(id)
-      .then(response => {
-      console.log(response)})
-      window.location.reload();
+      .then(setPersons(persons.filter(p => p.id !== id)))
+      
+      setMessage(`Deleted ${name}`)
+     
+    setTimeout(() => {
+      setMessage(null)
+      
+    }, 3000)
+    
+  
     }
+  
     
   }
   
 
- 
+  
  
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Errormessage message={errorMessage}/>
+      <Notification message={message}/>
       <Finder handleFinder={handleFinder}/>
       <h3>add a new</h3>
       <PersonForm addName={addName} newName={newName} handleNewPerson={handleNewPerson} newNumber={newNumber} handleNewNumber={handleNewNumber}/>

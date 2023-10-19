@@ -1,19 +1,14 @@
 {
   "persons": [
     {
-      "name": "jukka",
-      "number": "12491",
-      "id": 4
+      "name": "Seppo makkonen",
+      "number": "vitunhuora",
+      "id": 1
     },
     {
-      "name": "asdaf",
-      "number": "124125",
-      "id": 6
-    },
-    {
-      "name": "seppo",
-      "number": "123",
-      "id": 7
+      "name": "Ada Lovcelace",
+      "number": "231451",
+      "id": 2
     }
   ]
 }
