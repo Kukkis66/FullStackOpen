@@ -9,34 +9,44 @@ import apiService from './services/apiService'
 function App() {
   const [countries, setCountries] = useState([])
   const [searchField, setSearchField] = useState('')
+  
 
 
   useEffect(() => {
-    console.log('Country count', countries.length)
-
-    // skip if currency is not defined
-    
-      
+        
       apiService
         .getAll()
         .then(response => {
           setCountries(response.data)
         })
       
-  }, [])
+  }, [searchField])
 
   const handleCountries = (event) =>
   {
+    
     setSearchField(event.target.value)
   }
 
+  const handleOne = (name) =>
+  {
 
+    apiService
+      .getOne(name)
+      .then(response => {
+        
+        setCountries([response.data])
+      })
+
+      
+  }
+
+  
   return (
     <>
       <div>
       <Finder handleCountries={handleCountries}/>
-      
-       <Countries  countries={countries} searchField={searchField} />
+      <Countries  countries={countries} searchField={searchField} handleOne={handleOne} />
       </div>
         </>
   )

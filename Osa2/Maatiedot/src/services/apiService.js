@@ -8,7 +8,7 @@ const getAll = () => {
 
 
 const getOne = (name) => {
-    return axios.get(`${name}/${name}`)
+    return axios.get(`${baseUrl}/name/${name}`)
   }
 
 
