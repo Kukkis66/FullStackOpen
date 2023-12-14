@@ -1,4 +1,4 @@
-export const Errormessage = ({ message }) => {
+export const Errormessage = ({message}) => {
     if (message === null) {
       return null
     }

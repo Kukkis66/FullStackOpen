@@ -26,12 +26,12 @@ const App = () => {
     personService
       .getAll()
       .then(response => {
-        console.log('promise fulfilled', response.data)
+        
         setPersons(response.data)
         
       })
   }, [])
-  console.log(persons.length, 'persons')
+  
   
        const changeNumber = (id) => {
         
@@ -44,7 +44,7 @@ const App = () => {
           personService
             .update(id, changedNumber)
             .then(response => {
-              console.log(response.data, "vastaus")
+              
               
               setPersons(persons.map(p => p.id !== id ? p : response.data))
               setMessage(`person ${person.name} number was changed.`)
@@ -105,15 +105,24 @@ const App = () => {
     .create(personObject)
     .then(response => {
       setPersons(persons.concat(response.data))
-      
-      
-    })
-    setNewName('')
-    setNewNumber('')
-    setMessage(`Added ${personObject.name}`)
+      setMessage(`Added ${personObject.name}`)
     setTimeout(() => {
       setMessage(null)
     }, 3000)
+      
+    })
+    .catch(error => {
+     
+  
+      
+      setErrorMessage(error.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    })
+    setNewName('')
+    setNewNumber('')
+    
     
   }
  
@@ -170,7 +179,7 @@ const App = () => {
       <PersonForm addName={addName} newName={newName} handleNewPerson={handleNewPerson} newNumber={newNumber} handleNewNumber={handleNewNumber}/>
       <h2>Numbers</h2>
       
-      <Persons persons={persons} searchItem={searchItem} handleDelete={handleDelete} />
+      <Persons persons={persons} searchItem={searchItem} handleDelete={handleDelete}/>
       
       
     </div>
